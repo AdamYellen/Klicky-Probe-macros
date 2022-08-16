@@ -1,5 +1,5 @@
 # Klicky-Probe-macros
-Sync the Klipper_macros folder of Klicky-Probe
+Sync the Klipper_macros folder of [Klicky-Probe](https://github.com/jlas1/Klicky-Probe) so they can be auto-updated by Moonraker.
 
 ## Install
 ```
