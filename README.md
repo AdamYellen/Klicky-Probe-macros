@@ -24,6 +24,7 @@ variable_max_bed_x:           250
 Variable_attachmove_x:        0
 Variable_attachmove_y:        30
 ```
+NOTE: Don't modify any files in klicky-probe. Set printer-specific variables in printer.cfg after the includes.
 
 ## Configure Moonraker for updates
 ```
