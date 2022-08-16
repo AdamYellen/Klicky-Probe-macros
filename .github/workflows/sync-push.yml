@@ -54,6 +54,14 @@ jobs:
         repository: main
         commit_message: Sync with upstream
 
+    - name: Cleanup repos
+      run: |
+        rm -rf upstream
+        rm -rf main
+    
+    - name: Checkout local again
+      uses: actions/checkout@v3
+    
     - id: "tag"
       uses: fregante/daily-version-action@v2
       with:
