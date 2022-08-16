@@ -33,11 +33,13 @@ jobs:
       uses: actions/checkout@v3
       with:
         path: main
+
     - name: Checkout upstream
       uses: actions/checkout@v3
       with:
         repository: jlas1/Klicky-Probe
         path: upstream
+
     - name: Sync
       run: |
         rm -f main/*.cfg
@@ -51,3 +53,22 @@ jobs:
       with:
         repository: main
         commit_message: Sync with upstream
+
+    - id: "tag"
+      uses: fregante/daily-version-action@v2
+      with:
+        prefix: v
+
+    - id: "build"
+      run: |
+        zip klicky_macros.zip *.cfg
+
+    - id: "release"
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: ${{ steps.tag.outputs.version }}
+        prerelease: false
+        files: |
+          *.zip
+          LICENSE
