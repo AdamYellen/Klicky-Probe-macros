@@ -1,0 +1,53 @@
+name: sync-push
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  get_commits:
+    runs-on: ubuntu-latest
+    outputs:
+      LOCAL: ${{ steps.commits.outputs.SETLOCAL }}
+      REMOTE: ${{ steps.commits.outputs.SETREMOTE }} 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: main
+      - name: set local and remote latest commit as environment variables
+        id: commits
+        run: |
+          touch main/.last_sync_id
+          echo "::set-output name=SETREMOTE::$(git ls-remote https://github.com/jlas1/Klicky-Probe.git HEAD | awk '{ print $1 }')"
+          echo "::set-output name=SETLOCAL::$(cat main/.last_sync_id)"
+  
+  repo_sync:
+    needs: [get_commits]
+    runs-on: ubuntu-latest
+    if: needs.get_commits.outputs.LOCAL != needs.get_commits.outputs.REMOTE
+    steps:
+    - name: Checkout local
+      uses: actions/checkout@v3
+      with:
+        path: main
+    - name: Checkout upstream
+      uses: actions/checkout@v3
+      with:
+        repository: jlas1/Klicky-Probe
+        path: upstream
+    - name: Sync
+      run: |
+        rm -f main/*.cfg
+        cp -a upstream/Klipper_macros/*.cfg main/
+
+    - name: Update commit ID
+      run: echo ${{ needs.get_commits.outputs.REMOTE }} > main/.last_sync_id
+
+    - name: Commit and push the change
+      uses: stefanzweifel/git-auto-commit-action@latest
+      with:
+        repository: main
+        commit_message: Sync with upstream
