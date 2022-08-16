@@ -16,7 +16,7 @@ git clone https://github.com/AdamYellen/Klicky-Probe-macros.git klicky-probe
 #[include klicky-probe/klicky-quad-gantry-level.cfg]
 [include klicky-probe/klicky-z-tilt-adjust.cfg]
 
-# Klick Probe variable override
+# Klicky Probe variable override
 [gcode_macro _User_Variables]
 variable_max_bed_y:           250
 variable_max_bed_x:           250
