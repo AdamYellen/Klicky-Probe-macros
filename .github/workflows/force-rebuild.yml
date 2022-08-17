@@ -1,0 +1,18 @@
+name: force-rebuild
+
+on:
+  workflow_dispatch:
+
+jobs:
+  repo_sync:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout local
+      uses: actions/checkout@v3
+    - name: Clobber .last_sync_id
+      run: |
+        echo "" > .last_sync_id
+    - name: Commit and push the change
+      uses: stefanzweifel/git-auto-commit-action@latest
+      with:
+        commit_message: Force rebuild
